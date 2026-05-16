@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+
+metadata:
+  name: pipeline-maven
+
+spec:
+
+  params:
+    - name: github-url
+      type: string
+
+  workspaces:
+    - name: shared-data
+
+  tasks:
+
+    - name: clone-repo
+
+      taskRef:
+        name: git-clone
+
+      params:
+        - name: github-url
+          value: $(params.github-url)
+
+      workspaces:
+        - name: shared-data
+          workspace: shared-data
+    - name: build-task
+
+      runAfter:
+        - clone-repo
+
+      taskRef:
+        name: build-task
+
+      workspaces:
+        - name: shared-data
+          workspace: shared-data

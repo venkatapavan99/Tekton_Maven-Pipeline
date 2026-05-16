@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-clone
+spec:
+  params:
+    - name: github-url
+      type: string
+  workspaces:
+    - name: shared-data
+  steps:
+    - name: clone-repo
+      image: alpine/git
+      script: |
+        #!/bin/sh
+        cd $(workspaces.shared-data.path)
+        echo "$(workspaces.shared-data.path)" 
+        git clone $(params.github-url) .
+        ls -lrt
+

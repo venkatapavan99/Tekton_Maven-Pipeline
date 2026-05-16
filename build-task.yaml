@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+
+metadata:
+  name: build-task
+
+spec:
+
+  workspaces:
+    - name: shared-data
+
+  steps:
+    - name: build-task
+
+      image: maven:3.9.6-eclipse-temurin-17
+
+      workingDir: $(workspaces.shared-data.path)/spring-petclinic
+
+      script: |
+        #!/bin/bash
+        echo "Starting Maven Build"
+        pwd
+        mvn clean package
+        ls -lrt target/
+
+        echo "****Build Success!****"
